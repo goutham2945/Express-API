@@ -33,27 +33,16 @@ const updateReaction = async (req, resp) => {
     let postId = req.params.id;
     let reactionTypes = ["LIKE", "DISLIKE", "LOVE"];
     let { reactionType: rT } = req.body;
-    if (!(rT && reactionTypes.includes(rT)))
-      throw new Error(
-        `Expected param :reactionType:  ['LIKE', 'DISLIKE', 'LOVE']`
-      );
+    if (!(rT && reactionTypes.includes(rT)))throw new Error(`Expected param :reactionType:  ['LIKE', 'DISLIKE', 'LOVE']`);
     let post = await Posts.findById(postId)
       .populate("likedBy")
       .populate("dislikedBy")
       .exec();
     if (!post) throw new Error("Post id not found");
-    let userLiked = post.likedBy.findIndex(
-      ele => ele._id.toString() === req.user._id.toString()
-    );
-    let userDisliked = post.dislikedBy.findIndex(
-      ele => ele._id.toString() === req.user._id.toString()
-    );
-    if (userLiked != -1 && rT == "LIKE")
-      throw new Error("Operation not allowed : User already had liked");
-    if (userDisliked != -1 && rT == "DISLIKE")
-      throw new Error(
-        "Operation not allowed : User already had Disliked the post"
-      );
+    let userLiked = post.likedBy.findIndex(ele => ele._id.toString() === req.user._id.toString());
+    let userDisliked = post.dislikedBy.findIndex(ele => ele._id.toString() === req.user._id.toString());
+    if (userLiked != -1 && rT == "LIKE")throw new Error("Operation not allowed : User already had liked");
+    if (userDisliked != -1 && rT == "DISLIKE")throw new Error("Operation not allowed : User already had Disliked the post");
 
     switch (rT) {
       case "LIKE":
@@ -105,7 +94,6 @@ const getPost = async (req, resp) => {
 const getAllPosts = async (req, resp) => {
   try {
     let posts = await Posts.getPaginatedResults(req)
-    //let posts = await Posts.find({ owner: req.user._id }).getPaginatedResults(req)
     resp.push(true, "Posts found successfully", posts);
   } catch (err) {
     resp.status(404).push(false, err.message, null);

@@ -7,5 +7,6 @@ module.exports = {
     user: "User",
     post: "Post",
     comment: "Comment"
-  }
+  },
+  DEF_PER_PAGE_COUNT: 10
 };
