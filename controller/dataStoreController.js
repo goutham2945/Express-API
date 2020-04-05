@@ -52,6 +52,11 @@ const bulkUpload = async (req, resp, next) => {
 const downloadTable = async (req, resp, next) => {
   try {
         const collName = `${req.user._id}_${req.params.tbName}`;
+        // without strict: true, err is always null
+        // in strict mode, there is an err if the collection doesn't exist
+        // db.collection('test', { strict: true }, function (err, collection) {
+        //     if (err) throw new Error(err)
+        // })
         db.listCollections().toArray((err, colls) => {
             const colExits = colls.find((ele) => ele.name === collName);
             if (!colExits) resp.status(500).push(false, "No table exists", null);
@@ -75,6 +80,7 @@ const downloadTable = async (req, resp, next) => {
 const streamTableData = async (req, resp, next) => {
   try {
     const collName = `${req.user._id}_${req.params.tbName}`;
+    // db.collection('test', { strict: true }, function (err, collection) { throws error if coll not exists
     db.listCollections().toArray((err, colls) => {
         const colExits = colls.find((ele) => ele.name === collName);
         if (!colExits) resp.status(500).push(false, "No table exists", null);
