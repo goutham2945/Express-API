@@ -5,6 +5,7 @@ const path = require("path");
 const express = require("express");
 const router = express.Router();
 
+
 // Cutom imports
 const postController = require("../controller/postController");
 const { loginRequired, checkPermissions } = require("../middleware/middleware");

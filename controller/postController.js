@@ -119,7 +119,10 @@ const getAllComments = async (req, resp) => {
     let comments = await Comments.find({
       owner: req.user._id,
       post: req.params.id
-    }).getPaginatedResults(req);
+    }).populate([
+      { path: "owner", select: "-__v -_id" },
+      { path: "post", select: "-__v -_id" },
+    ]).select("-__v").getPaginatedResults(req);
     resp.push(true, "Comments found successfully", comments);
   } catch (err) {
     resp.status(404).push(false, err.message, null);

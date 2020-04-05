@@ -8,5 +8,7 @@ module.exports = {
     post: "Post",
     comment: "Comment"
   },
-  DEF_PER_PAGE_COUNT: 10
+  DEF_PER_PAGE_COUNT: 10,
+  DATASTORE_DB: "datastore",
+  DS_FILE_MAX_SIZE: 10
 };

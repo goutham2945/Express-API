@@ -12,7 +12,8 @@ const userAgent = require("express-useragent").express();
 // Node user defined imports
 let routesDir = path.join(__dirname, "routes");
 const userRoutes = require(path.join(routesDir, "userRoutes"));
-const postRoutes = require(path.join(routesDir, "postRoutes"))
+const postRoutes = require(path.join(routesDir, "postRoutes"));
+const dataStoreRoutes = require(path.join(routesDir, "dataStoreRoutes"));
 const { loginRequired, checkPermissions } = require("./middleware/middleware");
 
 // Global declarations
@@ -42,10 +43,11 @@ app.use("/uploads/users", express.static(path.join(__dirname, "/uploads/users"))
 // Routes
 app.use("/users", userRoutes);
 app.use("/posts", loginRequired, postRoutes);
+app.use("/datastore", loginRequired, dataStoreRoutes);
 
-app.use((req, resp) =>
+app.use((req, resp) => {
   resp.status(404).json({ success: false, message: "Invalid route" })
-);
+});
 app.use((error, req, resp, next) => {
   resp
     .status(error.status || 500)
@@ -66,7 +68,6 @@ process.on("SIGINT", function() {
   process.exit();
 });
 module.exports = app;
-
 
 
 
